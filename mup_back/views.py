@@ -101,20 +101,45 @@ def post_about(request):
 @api_view(["POST"],)
 def post_boletim(request):
     if request.method == "POST":
-        serializer = AboutSerializer(data=request.data)
+        serializer = BoletimSerializer(data=request.data)
 
         if serializer.is_valid():
             serializer.save()
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-        return Response(data=serializer.errors, status=status.HTTP_400_CREATED)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"],)
 def post_general(request):
     if request.method == "POST":
-        serializer = AboutSerializer(data=request.data)
+        serializer = GeneralSerializer(data=request.data)
 
         if serializer.is_valid():
             serializer.save()
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-        return Response(data=serializer.errors, status=status.HTTP_400_CREATED)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["GET"],)
+def get_last_about(request):
+    last_about = About.objects.last()
+
+    if request.method == "GET":
+        serializer = AboutSerializer(last_about)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+@api_view(["GET"],)
+def get_last_boletim(request):
+    last_boletim = Boletim.objects.last()
+
+    if request.method == "GET":
+        serializer = BoletimSerializer(last_boletim)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+@api_view(["GET"],)
+def get_last_general(request):
+    last_general = General.objects.last()
+
+    if request.method == "GET":
+        serializer = GeneralSerializer(last_general)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
