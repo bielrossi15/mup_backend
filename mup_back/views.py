@@ -16,11 +16,7 @@ class AboutViewSet(ModelViewSet):
     """
     queryset = About.objects.all()
     serializer_class = AboutSerializer
-    
-    def list(self, request):
-        permission_classes = (permissions.AllowAny,)
-        serializer = AboutSerializer(self.queryset, many=True)
-        return Response(serializer.data)
+    permission_classes = (permissions.AllowAny,)
 
     def retrieve(self, request, pk=None):
         text = get_object_or_404(self.queryset, pk=pk)
@@ -40,13 +36,9 @@ class BoletimViewSet(ModelViewSet):
     """
     A viewset for viewing and deleting about instances
     """
-    queryset = About.objects.all()
+    queryset = Boletim.objects.all()
     serializer_class = BoletimSerializer
-
-    def list(self, request):
-        permission_classes = (permissions.AllowAny,)
-        serializer = BoletimSerializer(self.queryset, many=True)
-        return Response(serializer.data)
+    permission_classes = (permissions.AllowAny,)
 
     def retrieve(self, request, pk=None):
         text = get_object_or_404(self.queryset, pk=pk)
@@ -67,11 +59,7 @@ class GeneralViewSet(ModelViewSet):
     """
     queryset = General.objects.all()
     serializer_class = GeneralSerializer
-
-    def list(self, request):
-        permission_classes = (permissions.AllowAny,)
-        serializer = GeneralSerializer(self.queryset, many=True)
-        return Response(serializer.data)
+    permission_classes = (permissions.AllowAny,)
     
     def retrieve(self, request, pk=None):
         text = get_object_or_404(self.queryset, pk=pk)
@@ -84,6 +72,9 @@ class GeneralViewSet(ModelViewSet):
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(data="Text deleted")
+
+    def post(self, validated_data):
+        return self.create(request, *args, **kwargs)
 
 
 
@@ -119,27 +110,3 @@ def post_general(request):
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(["GET"],)
-def get_last_about(request):
-    last_about = About.objects.last()
-
-    if request.method == "GET":
-        serializer = AboutSerializer(last_about)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-@api_view(["GET"],)
-def get_last_boletim(request):
-    last_boletim = Boletim.objects.last()
-
-    if request.method == "GET":
-        serializer = BoletimSerializer(last_boletim)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-@api_view(["GET"],)
-def get_last_general(request):
-    last_general = General.objects.last()
-
-    if request.method == "GET":
-        serializer = GeneralSerializer(last_general)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
