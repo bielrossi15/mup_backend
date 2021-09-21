@@ -4,4 +4,4 @@ build:
 run:
   web: python /code/manage.py makemigrations
   web: python /code/manage.py migrate
-  web: python /code/manage.py runserver
+  web: python /code/manage.py runserver 0.0.0.0:$PORT
